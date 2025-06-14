@@ -1,9 +1,13 @@
+using Amethyst.Server.Entities;
+using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters;
 using Amethyst.Systems.Characters.Base;
+using Amethyst.Systems.Characters.Base.Enums;
 using Amethyst.Systems.Characters.Storages.MongoDB;
 using Amethyst.Systems.Characters.Utilities;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Dynamic.Attributes;
+using Amethyst.Systems.Users.Base;
 using Amethyst.Systems.Users.Players;
 
 namespace Essentials.SSC;
@@ -68,12 +72,107 @@ public static class PluginCommands
         }
 
         ICharacterModel? targetModel = CharactersOrganizer.ServersideFactory.Storage.GetModel(targetName);
-        targetModel.Name = user.Name;
+        if (targetModel == null)
+        {
+            ctx.Messages.ReplyError("essentials.ssc.noTargetCharacter", targetName);
+            return;
+        }
 
-        CharacterUtilities.CopyCharacter(targetUser.Character.CurrentModel, ref model);
+        ICharacterModel currentModel = user.Character.CurrentModel;
 
-        user.Character.LoadModel(model);
+        CharacterUtilities.CopyCharacter(targetModel, ref currentModel);
 
-        ctx.Messages.ReplySuccess("essentials.ssc.cloneSuccess", targetUser.Name);
+        user.Character.LoadModel(currentModel);
+
+        ctx.Messages.ReplySuccess("essentials.ssc.cloneSuccess", targetModel.Name);
+    }
+
+    [Command(["ssc reset"], "essentials.ssc.reset")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.ssc.reset")]
+    [CommandSyntax("en-US", "<player>")]
+    [CommandSyntax("ru-RU", "<игрок>")]
+    public static void ResetCommand(PlayerUser user, CommandInvokeContext ctx, string targetName)
+    {
+        if (user.Character == null)
+        {
+            ctx.Messages.ReplyError("essentials.ssc.noCharacter");
+            return;
+        }
+
+        ICharacterModel? targetModel = CharactersOrganizer.ServersideFactory.Storage.GetModel(targetName);
+        if (targetModel == null)
+        {
+            ctx.Messages.ReplyError("essentials.ssc.noTargetCharacter", targetName);
+            return;
+        }
+
+        foreach (var plr in EntityTrackers.Players)
+        {
+            if (plr.User?.Character?.CurrentModel?.Name == targetModel.Name)
+            {
+                plr.Kick("essentials.ssc.yourCharacterReset");
+            }
+        }
+
+        ctx.Messages.ReplySuccess("essentials.ssc.resetSuccess", targetModel.Name);
+    }
+
+    [Command(["ssc setlife"], "essentials.ssc.setlife")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.ssc.setlife")]
+    [CommandSyntax("en-US", "<life>", "[player]")]
+    [CommandSyntax("ru-RU", "<жизнь>", "[игрок]")]
+    public static void SetLifeCommand(IAmethystUser user, CommandInvokeContext ctx, int life, PlayerEntity? plr = null)
+    {
+        if (plr == null)
+        {
+            if (user is not PlayerUser playerUser || playerUser.Character == null)
+            {
+                ctx.Messages.ReplyError("essentials.ssc.noCharacter");
+                return;
+            }
+
+            plr = playerUser.Player;
+        }
+
+        if (plr.User == null || plr.User.Character == null)
+        {
+            ctx.Messages.ReplyError("essentials.ssc.noTargetCharacter", plr.Name);
+            return;
+        }
+
+        plr.User.Character.Editor.SetLife(SyncType.Broadcast, null, life);
+
+        ctx.Messages.ReplySuccess("essentials.ssc.setLifeSuccess", plr.Name, life);
+    }
+
+    [Command(["ssc setmana"], "essentials.ssc.setmana")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.ssc.setmana")]
+    [CommandSyntax("en-US", "<mana>", "[player]")]
+    [CommandSyntax("ru-RU", "<мана>", "[игрок]")]
+    public static void SetManaCommand(IAmethystUser user, CommandInvokeContext ctx, int mana, PlayerEntity? plr = null)
+    {
+        if (plr == null)
+        {
+            if (user is not PlayerUser playerUser || playerUser.Character == null)
+            {
+                ctx.Messages.ReplyError("essentials.ssc.noCharacter");
+                return;
+            }
+
+            plr = playerUser.Player;
+        }
+
+        if (plr.User == null || plr.User.Character == null)
+        {
+            ctx.Messages.ReplyError("essentials.ssc.noTargetCharacter", plr.Name);
+            return;
+        }
+
+        plr.User.Character.Editor.SetMana(SyncType.Broadcast, null, mana);
+
+        ctx.Messages.ReplySuccess("essentials.ssc.setManaSuccess", plr.Name, mana);
     }
 }
