@@ -11,16 +11,21 @@ public sealed class PunishmentsPlayerExtension : IUserExtension
 
     public List<PunishmentModel> Mutes { get; set; } = new();
 
+    public void LoadMutes(PlayerUser user)
+    {
+        Mutes = PluginStorage.Mutes
+            .FindAll(x => x.UUIDs.Contains(user.UUID) || x.Names.Contains(user.Name) || x.IPs.Contains(user.IP))
+            .ToList();
+    }
+
     public void Load(IAmethystUser user)
     {
-        if (user is not PlayerUser player)
+        if (user is not PlayerUser plrUser)
         {
             return;
         }
 
-        Mutes = PluginStorage.Mutes
-            .FindAll(x => x.UUIDs.Contains(player.UUID) || x.Names.Contains(user.Name) || x.IPs.Contains(player.IP))
-            .ToList();
+        LoadMutes(plrUser);
     }
 
     public void Unload(IAmethystUser user)
