@@ -1,11 +1,11 @@
 using Amethyst.Storages.Mongo;
-using Essentials.Punishments.Data;
 
-namespace Essentials.Warps.Data;
+namespace Essentials.Punishments.Data;
 
 public static class PluginStorage
 {
-    public static MongoDatabase RegionDatabase { get; }
+    public static MongoDatabase PunishmentsDatabase { get; }
         = new(EssentialsConfiguration.Instance.GetConnectionString(), EssentialsConfiguration.Instance.GetStorageName());
-    public static MongoModels<PunishmentModel> Regions { get; } = RegionDatabase.Get<PunishmentModel>("Warps");
+    public static MongoModels<PunishmentModel> Bans { get; } = PunishmentsDatabase.Get<PunishmentModel>("BansCollection");
+    public static MongoModels<PunishmentModel> Mutes { get; } = PunishmentsDatabase.Get<PunishmentModel>("MutesCollection");
 }

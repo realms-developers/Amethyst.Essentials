@@ -15,5 +15,7 @@ public abstract class PunishmentModel : DataModel
     public string? Reason { get; set; }
     public string? Administrator { get; set; }
 
-    
+    public List<string> Names { get; set; } = new List<string>();
+    public List<string> UUIDs { get; set; } = new List<string>();
+    public List<string> IPs { get; set; } = new List<string>();
 }

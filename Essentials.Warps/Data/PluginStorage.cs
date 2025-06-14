@@ -5,7 +5,7 @@ namespace Essentials.Warps.Data;
 
 public static class PluginStorage
 {
-    public static MongoDatabase RegionDatabase { get; }
+    public static MongoDatabase WarpDatabase { get; }
         = new(EssentialsConfiguration.Instance.GetConnectionString(), EssentialsConfiguration.Instance.GetStorageName());
-    public static MongoModels<WarpModel> Regions { get; } = RegionDatabase.Get<WarpModel>("Warps");
+    public static MongoModels<WarpModel> Warps { get; } = WarpDatabase.Get<WarpModel>("WarpsCollection");
 }

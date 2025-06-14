@@ -21,6 +21,6 @@ public sealed class EssentialsPlugin : PluginInstance
 
     public static void ReloadWarps()
     {
-        LoadedWarps = PluginStorage.Regions.FindAll().ToList();
+        LoadedWarps = PluginStorage.Warps.FindAll().ToList();
     }
 }

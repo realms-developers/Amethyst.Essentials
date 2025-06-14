@@ -15,11 +15,11 @@ public sealed class WarpModel : DataModel
 
     public override void Save()
     {
-        PluginStorage.Regions.Save(this);
+        PluginStorage.Warps.Save(this);
     }
 
     public override void Remove()
     {
-        PluginStorage.Regions.Remove(Name);
+        PluginStorage.Warps.Remove(Name);
     }
 }
