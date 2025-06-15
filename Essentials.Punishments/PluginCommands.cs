@@ -55,7 +55,7 @@ public static class PluginCommands
         }
     }
 
-    [Command(["ban"], "essentials.punishments.ban")]
+    [Command(["pban"], "essentials.punishments.ban")]
     [CommandRepository("shared")]
     [CommandPermission("essentials.punishments.ban")]
     [CommandSyntax("en-US", "<name>", "<reason>", "[duration]")]
@@ -219,7 +219,7 @@ public static class PluginCommands
         ctx.Messages.ReplyPage(pages, "essentials.punishments.banList.title", null, null, false, page);
     }
 
-    [Command(["mute"], "essentials.punishments.mute")]
+    [Command(["pmute"], "essentials.punishments.mute")]
     [CommandRepository("shared")]
     [CommandPermission("essentials.punishments.mute")]
     [CommandSyntax("en-US", "<name>", "<reason>", "[duration]")]

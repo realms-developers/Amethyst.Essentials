@@ -29,6 +29,8 @@ public sealed class MuteChatHandler : IChatMessageHandler
             return;
         }
 
+        message.Cancel();
+
         if (mute.Reason != null)
         {
             message.Player.User!.Messages.ReplyInfo("essentials.punishments.mutechat.reason", mute.Reason, remaining.ToString(@"hh\:mm\:ss"));
