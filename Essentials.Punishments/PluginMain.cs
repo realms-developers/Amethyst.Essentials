@@ -6,15 +6,15 @@ using Essentials.Punishments.Working;
 using Amethyst.Systems.Chat;
 using Amethyst.Hooks;
 using Amethyst.Hooks.Args.Players;
-using Amethyst.Hooks.Context;
 using Essentials.Punishments.Data;
 using System.Text;
 using Amethyst;
 using Amethyst.Kernel;
+using Amethyst.Hooks.Base;
 
 namespace Essentials.Punishments;
 
-[ExtensionMetadata("Essentials.Punishments", "author", "provides epic features")]
+[ExtensionMetadata("Essentials.Punishments", "author", "Provides banning and muting players")]
 public sealed class PluginMain : PluginInstance
 {
     private static MuteChatHandler _chatHandler = new MuteChatHandler();

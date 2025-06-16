@@ -2,7 +2,7 @@ using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Characters;
 using Amethyst.Systems.Characters.Base;
-using Amethyst.Systems.Characters.Base.Enums;
+using Amethyst.Systems.Characters.Enums;
 using Amethyst.Systems.Characters.Storages.MongoDB;
 using Amethyst.Systems.Characters.Utilities;
 using Amethyst.Systems.Commands.Base;

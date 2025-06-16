@@ -4,8 +4,6 @@ using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Dynamic.Attributes;
 using Amethyst.Systems.Users.Base.Requests;
 using Amethyst.Systems.Users.Players;
-using Microsoft.Xna.Framework;
-using Terraria;
 
 namespace Essentials.TeleportRequests;
 
@@ -61,10 +59,10 @@ public static class PluginCommands
             "essentials.teleportrequest",
             user.Requests.FindFreeIndex("essentials.teleportrequest"),
             new TeleportContext(target, user.Player))
-        .WithAutoRemove(true).WithRemoveIn(TimeSpan.FromMinutes(1))
-        .WithOnAccepted(OnAccepted)
-        .WithOnRejected(OnRejected)
-        .Build();
+            .WithAutoRemove(true).WithRemoveIn(TimeSpan.FromMinutes(1))
+            .WithOnAccepted(OnAccepted)
+            .WithOnRejected(OnRejected)
+            .Build();
 
         target.User.Requests.AddRequest(request);
         ctx.Messages.ReplySuccess("essentials.tpr.requestSent", target.Name);
