@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Amethyst;
 using Amethyst.Kernel;
+using Amethyst.Network.Structures;
 using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Commands.Base;
@@ -53,6 +54,18 @@ public static class PluginCommands
                 (player.User?.Extensions.GetExtension("essentials.punishments") as PunishmentsPlayerExtension)?.LoadMutes(player.User!);
             }
         }
+    }
+
+    [Command("pkick", "essentials.punishments.kick")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.punishments.kick")]
+    [CommandSyntax("en-US", "<name>", "<reason>")]
+    [CommandSyntax("ru-RU", "<имя>", "<причина>")]
+    public static void KickCommand(IAmethystUser user, CommandInvokeContext ctx, PlayerEntity plr, string reason)
+    {
+        plr.Kick($"==== Kicked, {plr.Name} ====\n{reason}");
+
+        PlayerUtils.BroadcastText("essentials.punishments.kick.broadcast", new NetColor(255, 0, 0), plr.Name, reason);
     }
 
     [Command(["pban"], "essentials.punishments.ban")]
