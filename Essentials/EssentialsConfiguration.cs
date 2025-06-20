@@ -18,20 +18,19 @@ public sealed class EssentialsConfiguration
     public static Configuration<EssentialsConfiguration> Configuration { get; }
     public static EssentialsConfiguration Instance => Configuration.Data;
 
-    public bool DisableLiquidExplosions { get; set; }
+    public bool DisableLiquidExplosions { get; set; } // 1
     public bool DisableNPCs { get; set; } // 1
     public bool DisablePvP { get; set; }
     public bool DisablePvPTeams { get; set; }
-    public bool DisableWiring { get; set; }
-    public bool DisableSandfall { get; set; }
-    public bool DisableHardMode { get; set; }
+    public bool DisableWiring { get; set; } // 1
+    public bool DisableSandfall { get; set; } // 1
     public bool DisableDungeonGuardians { get; set; } // 1
     public bool DisableBosses { get; set; } // 1
     public bool DisableEvents { get; set; }
     public bool DisableWeather { get; set; }
     public bool DisableClownBombs { get; set; }
     public bool DisablePrimeBombs { get; set; }
-    public bool DisableLiquidUpdate { get; set; }
+    public bool DisableLiquidUpdate { get; set; } // 1
     public bool DisableItems { get; set; }
     public bool DisableNPCSpawning { get; set; } // 1
     public bool DisableDressers { get; set; }
