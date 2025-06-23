@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials", "Essentials\Essentials.csproj", "{87569353-8FC8-4638-81A6-745467ED5EC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials", "Essentials\src\Essentials.csproj", "{87569353-8FC8-4638-81A6-745467ED5EC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Houses", "Essentials.Houses\Essentials.Houses.csproj", "{1B918E38-0E2B-447D-92A4-DE2C3A3FA14A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Houses", "Essentials.Houses\src\Essentials.Houses.csproj", "{1B918E38-0E2B-447D-92A4-DE2C3A3FA14A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Punishments", "Essentials.Punishments\Essentials.Punishments.csproj", "{915E6E73-FD3E-47E7-8B7D-B25A609F01A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Punishments", "Essentials.Punishments\src\Essentials.Punishments.csproj", "{915E6E73-FD3E-47E7-8B7D-B25A609F01A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.SSC", "Essentials.SSC\Essentials.SSC.csproj", "{03C97D30-6C81-4F33-93E7-1831EBE560CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.SSC", "Essentials.SSC\src\Essentials.SSC.csproj", "{03C97D30-6C81-4F33-93E7-1831EBE560CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.TeleportRequests", "Essentials.TeleportRequests\Essentials.TeleportRequests.csproj", "{F11BBD71-BE25-4447-B913-35A46D80FB2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.TeleportRequests", "Essentials.TeleportRequests\src\Essentials.TeleportRequests.csproj", "{F11BBD71-BE25-4447-B913-35A46D80FB2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Warps", "Essentials.Warps\Essentials.Warps.csproj", "{B6FACFEB-B812-4B05-84CF-688B30843477}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Warps", "Essentials.Warps\src\Essentials.Warps.csproj", "{B6FACFEB-B812-4B05-84CF-688B30843477}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Entities", "Essentials.Entities\Essentials.Entities.csproj", "{2EA2A62B-DC10-4E79-BDD1-3502342029EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essentials.Entities", "Essentials.Entities\src\Essentials.Entities.csproj", "{2EA2A62B-DC10-4E79-BDD1-3502342029EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
