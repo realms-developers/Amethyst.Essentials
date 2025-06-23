@@ -1,4 +1,6 @@
+using System.Reflection;
 using Amethyst.Network.Structures;
+using Amethyst.Server.Entities;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Systems.Commands.Base;
 using Amethyst.Systems.Commands.Dynamic.Attributes;
@@ -20,6 +22,27 @@ public static class PluginCommands
     {
         user.Player.Teleport(Main.spawnTileX * 16, Main.spawnTileY * 16);
         ctx.Messages.ReplySuccess("essentials.teleportToSpawnpoint.success");
+    }
+
+    [Command(["who", "players"], "essentials.listPlayers")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "[page]")]
+    [CommandSyntax("ru-RU", "[страница]")]
+    [CommandPermission("essentials.listPlayers")]
+    public static void ListPlayersCommand(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
+    {
+        List<string> players = EntityTrackers.Players
+            .Select(p => $"{p.Name} ({p.User?.Name ?? "Unknown"})")
+            .ToList();
+
+        if (players.Count == 0)
+        {
+            ctx.Messages.ReplyError("essentials.listPlayers.noPlayers");
+            return;
+        }
+
+        PagesCollection pages = PagesCollection.AsListPage(players);
+        ctx.Messages.ReplyPage(pages, "essentials.listPlayers.title", null, null, false, page);
     }
 
     [Command(["i", "item"], "essentials.item")]
@@ -344,5 +367,395 @@ public static class PluginCommands
 
 
         PlayerUtils.BroadcastText(message, new NetColor(0, 150, 0));
-    }   
+    }
+
+    [Command("gamerule setbool", "essentials.setGamerule")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "<rule>", "<true/false>")]
+    [CommandSyntax("ru-RU", "<правило>", "<true/false>")]
+    [CommandPermission("essentials.setGamerule")]
+    public static void SetGameruleCommand(IAmethystUser user, CommandInvokeContext ctx, string rule, bool value)
+    {
+        if (string.IsNullOrEmpty(rule))
+        {
+            ctx.Messages.ReplyError("essentials.setGamerule.emptyRule");
+            return;
+        }
+
+        FieldInfo? field = typeof(Main).GetFields().FirstOrDefault(p => p.Name.Equals(rule, StringComparison.OrdinalIgnoreCase));
+
+        if (field == null)
+        {
+            ctx.Messages.ReplyError("essentials.setGamerule.ruleNotFound", rule);
+            return;
+        }
+
+        if (!field.FieldType.IsAssignableTo(typeof(bool)))
+        {
+            ctx.Messages.ReplyError("essentials.setGamerule.ruleNotBoolean", rule);
+            return;
+        }
+
+        field.SetValue(EssentialsConfiguration.Instance, value);
+        EssentialsConfiguration.Configuration.Save();
+
+        ctx.Messages.ReplySuccess("essentials.setGamerule.success", rule, value ? "true" : "false");
+    }
+
+    [Command("gamerule getbool", "essentials.getGamerule")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "<rule>")]
+    [CommandSyntax("ru-RU", "<правило>")]
+    [CommandPermission("essentials.getGamerule")]
+    public static void GetGameruleCommand(IAmethystUser user, CommandInvokeContext ctx, string rule)
+    {
+        if (string.IsNullOrEmpty(rule))
+        {
+            ctx.Messages.ReplyError("essentials.getGamerule.emptyRule");
+            return;
+        }
+
+        FieldInfo? field = typeof(Main).GetFields().FirstOrDefault(p => p.Name.Equals(rule, StringComparison.OrdinalIgnoreCase));
+        if (field == null)
+        {
+            ctx.Messages.ReplyError("essentials.getGamerule.ruleNotFound", rule);
+            return;
+        }
+
+        if (!field.FieldType.IsAssignableTo(typeof(bool)))
+        {
+            ctx.Messages.ReplyError("essentials.getGamerule.ruleNotBoolean", rule);
+            return;
+        }
+
+        bool value = (bool)field.GetValue(EssentialsConfiguration.Instance)!;
+        ctx.Messages.ReplySuccess("essentials.getGamerule.success", rule, value ? "true" : "false");
+    }
+
+    [Command("gamerule list", "essentials.listGamerules")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.listGamerules")]
+    public static void ListGamerulesCommand(IAmethystUser user, CommandInvokeContext ctx, int page)
+    {
+        var gamerules = typeof(Main).GetFields()
+            .Where(f => f.FieldType == typeof(bool))
+            .Select(f => new { Name = f.Name, Value = (bool)f.GetValue(EssentialsConfiguration.Instance)! })
+            .ToList();
+
+        if (gamerules.Count == 0)
+        {
+            ctx.Messages.ReplyError("essentials.listGamerules.noRules");
+            return;
+        }
+
+        PagesCollection pages = PagesCollection.AsListPage(gamerules.Select(g => $"{g.Name}: {g.Value}").ToList());
+        ctx.Messages.ReplyPage(pages, "essentials.gamerules", null, null, false, page);
+    }
+
+    [Command("whitelist addplr", "essentials.whitelist.addplr")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "<player name>")]
+    [CommandPermission("essentials.whitelist.addplr")]
+    public static void WhitelistAddPlayerCommand(IAmethystUser user, CommandInvokeContext ctx, string playerName)
+    {
+        if (string.IsNullOrWhiteSpace(playerName))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.addplr.emptyName");
+            return;
+        }
+
+        if (EssentialsConfiguration.Instance.WhitelistUsers.Contains(playerName))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.addplr.alreadyExists", playerName);
+            return;
+        }
+
+        EssentialsConfiguration.Instance.WhitelistUsers.Add(playerName);
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.whitelist.addplr.success", playerName);
+    }
+
+    [Command("whitelist addip", "essentials.whitelist.addip")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "<ip address>")]
+    [CommandPermission("essentials.whitelist.addip")]
+    public static void WhitelistAddIpCommand(IAmethystUser user, CommandInvokeContext ctx, string ipAddress)
+    {
+        if (string.IsNullOrWhiteSpace(ipAddress))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.addip.emptyIp");
+            return;
+        }
+
+        if (EssentialsConfiguration.Instance.WhitelistIPs.Contains(ipAddress))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.addip.alreadyExists", ipAddress);
+            return;
+        }
+
+        EssentialsConfiguration.Instance.WhitelistIPs.Add(ipAddress);
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.whitelist.addip.success", ipAddress);
+    }
+
+    [Command("whitelist removeplr", "essentials.whitelist.removeplr")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "<player name>")]
+    [CommandPermission("essentials.whitelist.removeplr")]
+    public static void WhitelistRemovePlayerCommand(IAmethystUser user, CommandInvokeContext ctx, string playerName)
+    {
+        if (string.IsNullOrWhiteSpace(playerName))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.removeplr.emptyName");
+            return;
+        }
+
+        if (!EssentialsConfiguration.Instance.WhitelistUsers.Contains(playerName))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.removeplr.notFound", playerName);
+            return;
+        }
+
+        EssentialsConfiguration.Instance.WhitelistUsers.Remove(playerName);
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.whitelist.removeplr.success", playerName);
+    }
+
+    [Command("whitelist removeip", "essentials.whitelist.removeip")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "<ip address>")]
+    [CommandPermission("essentials.whitelist.removeip")]
+    public static void WhitelistRemoveIpCommand(IAmethystUser user, CommandInvokeContext ctx, string ipAddress)
+    {
+        if (string.IsNullOrWhiteSpace(ipAddress))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.removeip.emptyIp");
+            return;
+        }
+
+        if (!EssentialsConfiguration.Instance.WhitelistIPs.Contains(ipAddress))
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.removeip.notFound", ipAddress);
+            return;
+        }
+
+        EssentialsConfiguration.Instance.WhitelistIPs.Remove(ipAddress);
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.whitelist.removeip.success", ipAddress);
+    }
+
+    [Command("whitelist listplr", "essentials.whitelist.listplr")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.whitelist.listplr")]
+    public static void WhitelistListPlayersCommand(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
+    {
+        var users = EssentialsConfiguration.Instance.WhitelistUsers.ToList();
+        if (users.Count == 0)
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.listplr.empty");
+            return;
+        }
+
+        PagesCollection pages = PagesCollection.AsListPage(users);
+        ctx.Messages.ReplyPage(pages, "essentials.whitelist.listplr.title", null, null, false, page);
+    }
+
+    [Command("whitelist listip", "essentials.whitelist.listip")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.whitelist.listip")]
+    public static void WhitelistListIpsCommand(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
+    {
+        var ips = EssentialsConfiguration.Instance.WhitelistIPs.ToList();
+        if (ips.Count == 0)
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.listip.empty");
+            return;
+        }
+
+        PagesCollection pages = PagesCollection.AsListPage(ips);
+        ctx.Messages.ReplyPage(pages, "essentials.whitelist.listip.title", null, null, false, page);
+    }
+
+    [Command("whitelist enable", "essentials.whitelist.enable")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.whitelist.enable")]
+    public static void WhitelistEnableCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        if (EssentialsConfiguration.Instance.EnableWhitelist)
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.enable.alreadyEnabled");
+            return;
+        }
+
+        EssentialsConfiguration.Instance.EnableWhitelist = true;
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.whitelist.enable.success");
+    }
+
+    [Command("whitelist disable", "essentials.whitelist.disable")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.whitelist.disable")]
+    public static void WhitelistDisableCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        if (!EssentialsConfiguration.Instance.EnableWhitelist)
+        {
+            ctx.Messages.ReplyError("essentials.whitelist.disable.alreadyDisabled");
+            return;
+        }
+
+        EssentialsConfiguration.Instance.EnableWhitelist = false;
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.whitelist.disable.success");
+    }
+
+    [Command("time freeze", "essentials.freezeTime")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.freezeTime")]
+    public static void FreezeTimeCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        EssentialsConfiguration.Instance.FreezeTime = true;
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.freezeTime.success", Main.time);
+    }
+
+    [Command("time unfreeze", "essentials.unfreezeTime")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.freezeTime")]
+    public static void UnfreezeTimeCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        EssentialsConfiguration.Instance.FreezeTime = false;
+        EssentialsConfiguration.Configuration.Save();
+        ctx.Messages.ReplySuccess("essentials.unfreezeTime.success");
+    }
+
+    [Command("time show", "essentials.showTime")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.showTime")]
+    public static void ShowTimeCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        double time = Main.time / 3600.0 + (Main.dayTime ? 4.5 : 19.5);
+        time = time % 24.0;
+
+        ctx.Messages.ReplyInfo("essentials.showTime.currentTime", $"{(int)Math.Floor(time)}:{(int)Math.Floor(time % 1.0 * 60.0)}");
+    }
+
+    [Command("time set", "essentials.setTime")]
+    [CommandRepository("shared")]
+    [CommandSyntax("en-US", "<time in 24:00>")]
+    [CommandSyntax("ru-RU", "<время в формате 24:00>")]
+    [CommandPermission("essentials.setTime")]
+    public static void SetTimeCommand(IAmethystUser user, CommandInvokeContext ctx, string time)
+    {
+        if (string.IsNullOrWhiteSpace(time) || !TimeSpan.TryParse(time, out TimeSpan parsedTime))
+        {
+            ctx.Messages.ReplyError("essentials.setTime.invalidTime");
+            return;
+        }
+
+        int totalMinutes = (int)parsedTime.TotalMinutes;
+        if (totalMinutes < 0 || totalMinutes >= 1440)
+        {
+            ctx.Messages.ReplyError("essentials.setTime.outOfRange");
+            return;
+        }
+
+        double newTime = (totalMinutes * 60) - 4.50;
+        if (newTime < 0)
+        {
+            newTime += 24;
+        }
+
+        Main.dayTime = newTime < 15;
+        Main.time = totalMinutes * 60;
+
+        NetMessage.SendData(18);
+
+        ctx.Messages.ReplySuccess("essentials.setTime.success", time);
+    }
+
+    [Command("time noon", "essentials.setTimeNoon")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.setTimeNoon")]
+    public static void SetTimeNoonCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        Main.dayTime = true;
+        Main.time = 27000;
+        NetMessage.SendData(18);
+
+        ctx.Messages.ReplySuccess("essentials.setTimeNoon.success");
+    }
+
+    [Command("time midnight", "essentials.setTimeMidnight")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.setTimeMidnight")]
+    public static void SetTimeMidnightCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        Main.dayTime = false;
+        Main.time = 16200;
+        NetMessage.SendData(18);
+
+        ctx.Messages.ReplySuccess("essentials.setTimeMidnight.success");
+    }
+
+    [Command("time day", "essentials.setTimeDay")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.setTimeDay")]
+    public static void SetTimeDayCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        Main.dayTime = true;
+        Main.time = 0;
+        NetMessage.SendData(18);
+
+        ctx.Messages.ReplySuccess("essentials.setTimeDay.success");
+    }
+
+    [Command("time night", "essentials.setTimeNight")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.setTimeNight")]
+    public static void SetTimeNightCommand(IAmethystUser user, CommandInvokeContext ctx)
+    {
+        Main.dayTime = false;
+        Main.time = 0;
+        NetMessage.SendData(18);
+
+        ctx.Messages.ReplySuccess("essentials.setTimeNight.success");
+    }
+
+    [Command("pointset dungeon", "essentials.setDungeonPoint")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.setDungeonPoint")]
+    public static void SetDungeonPointCommand(PlayerUser user, CommandInvokeContext ctx)
+    {
+        Main.dungeonX = (int)user.Player.Position.X / 16;
+        Main.dungeonY = (int)user.Player.Position.Y / 16;
+
+        ctx.Messages.ReplySuccess("essentials.setDungeonPoint.success", Main.dungeonX, Main.dungeonY);
+    }
+
+    [Command("pointset spawn", "essentials.setSpawnPoint")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.setSpawnPoint")]
+    public static void SetSpawnPointCommand(PlayerUser user, CommandInvokeContext ctx)
+    {
+        Main.spawnTileX = (int)user.Player.Position.X / 16;
+        Main.spawnTileY = (int)user.Player.Position.Y / 16;
+
+        ctx.Messages.ReplySuccess("essentials.setSpawnPoint.success", Main.spawnTileX, Main.spawnTileY);
+    }
+
+    [Command("liquidpanic", "essentials.liquidPanic")]
+    [CommandRepository("shared")]
+    [CommandPermission("essentials.liquidPanic")]
+    public static void LiquidPanicCommand(PlayerUser user, CommandInvokeContext ctx)
+    {
+        if (Liquid.panicMode)
+        {
+            ctx.Messages.ReplySuccess("essentials.liquidPanic.alreadyEnabled");
+        }
+        else
+        {
+            Liquid.StartPanic();
+            ctx.Messages.ReplySuccess("essentials.liquidPanic.enabled");
+        }
+    }
 }   

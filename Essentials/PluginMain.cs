@@ -9,6 +9,7 @@ using Amethyst.Hooks.Args.Utility;
 using Amethyst.Server.Entities;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Network;
+using Terraria.GameContent.Creative;
 
 namespace Essentials;
 
@@ -44,11 +45,12 @@ public sealed class PluginMain : PluginInstance
 
     private void OnSecondTick(in SecondTickArgs args, HookResult<SecondTickArgs> result)
     {
-        if (EssentialsConfiguration.Instance.FreezeTime.HasValue)
+        if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled != EssentialsConfiguration.Instance.FreezeTime)
         {
-            Main.dayTime = EssentialsConfiguration.Instance.FreezeTimeDay;
-            Main.time = EssentialsConfiguration.Instance.FreezeTime.Value;
+            CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().SetPowerInfo(EssentialsConfiguration.Instance.FreezeTime);
         }
+
+        WorldGen.AllowedToSpreadInfections = !EssentialsConfiguration.Instance.DisableEvilSpreading;
 
         foreach (PlayerEntity player in EntityTrackers.Players)
         {
@@ -88,7 +90,7 @@ public sealed class PluginMain : PluginInstance
             {
                 Terraria.GameContent.Events.DD2Event.StopInvasion();
             }
-            
+
             Main.bloodMoon = false;
             Main.eclipse = false;
             Main.slimeRain = false;

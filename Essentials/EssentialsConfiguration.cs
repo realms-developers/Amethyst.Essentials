@@ -35,9 +35,9 @@ public sealed class EssentialsConfiguration
     public bool DisableItems { get; set; }
     public bool DisableNPCSpawning { get; set; }
     public bool DisableAnnouncementBox { get; set; }
+    public bool DisableEvilSpreading { get; set; }
 
-    public int? FreezeTime { get; set; } = null;
-    public bool FreezeTimeDay { get; set; } = false;
+    public bool FreezeTime { get; set; }
 
     public bool EnableWhitelist { get; set; } = false;
     public List<string> WhitelistUsers { get; set; } = new();
