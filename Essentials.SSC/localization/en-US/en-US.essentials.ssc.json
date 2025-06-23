@@ -1,0 +1,21 @@
+{
+    "essentials.ssc.noCharacter": "You do not have a character.",
+    "essentials.ssc.backupSuccess": "Your character has been backed up successfully.",
+    "essentials.ssc.restoreSuccess": "Your character has been restored from backup.",
+    "essentials.ssc.noBackupFound": "No backup found for your character.",
+    "essentials.ssc.noTargetCharacter": "Character \"{0}\" not found.",
+    "essentials.ssc.cloneSuccess": "You have successfully cloned the character \"{0}\".",
+    "essentials.ssc.resetSuccess": "Character \"{0}\" has been reset.",
+    "essentials.ssc.yourCharacterReset": "Your character has been reset by an administrator.",
+    "essentials.ssc.setLifeSuccess": "Set life for \"{0}\" to {1}.",
+    "essentials.ssc.setManaSuccess": "Set mana for \"{0}\" to {1}.",
+    "essentials.ssc.backup": "Backup your character.",
+    "essentials.ssc.backup.description": "Creates a backup of your current character state.",
+    "essentials.ssc.restore": "Restore your character from backup.",
+    "essentials.ssc.restore.description": "Restores your character from the last backup.",
+    "essentials.ssc.clone": "Clone another player's character.",
+    "essentials.ssc.clone.description": "Copies another player's character data to your character.",
+    "essentials.ssc.reset": "Reset another player's character.",
+    "essentials.ssc.setlife": "Set the life value for a player.",
+    "essentials.ssc.setmana": "Set the mana value for a player."
+}

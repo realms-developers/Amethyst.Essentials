@@ -1,0 +1,21 @@
+{
+    "essentials.ssc.noCharacter": "У вас нет персонажа.",
+    "essentials.ssc.backupSuccess": "Ваш персонаж успешно сохранён в резервной копии.",
+    "essentials.ssc.restoreSuccess": "Ваш персонаж восстановлен из резервной копии.",
+    "essentials.ssc.noBackupFound": "Резервная копия для вашего персонажа не найдена.",
+    "essentials.ssc.noTargetCharacter": "Персонаж \"{0}\" не найден.",
+    "essentials.ssc.cloneSuccess": "Вы успешно клонировали персонажа \"{0}\".",
+    "essentials.ssc.resetSuccess": "Персонаж \"{0}\" был сброшен.",
+    "essentials.ssc.yourCharacterReset": "Ваш персонаж был сброшен администратором.",
+    "essentials.ssc.setLifeSuccess": "Значение жизни для \"{0}\" установлено на {1}.",
+    "essentials.ssc.setManaSuccess": "Значение маны для \"{0}\" установлено на {1}.",
+    "essentials.ssc.backup": "Сделать резервную копию персонажа.",
+    "essentials.ssc.backup.description": "Создаёт резервную копию текущего состояния вашего персонажа.",
+    "essentials.ssc.restore": "Восстановить персонажа из резервной копии.",
+    "essentials.ssc.restore.description": "Восстанавливает вашего персонажа из последней резервной копии.",
+    "essentials.ssc.clone": "Клонировать персонажа другого игрока.",
+    "essentials.ssc.clone.description": "Копирует данные персонажа другого игрока на вашего персонажа.",
+    "essentials.ssc.reset": "Сбросить персонажа другого игрока.",
+    "essentials.ssc.setlife": "Установить значение жизни для игрока.",
+    "essentials.ssc.setmana": "Установить значение маны для игрока."
+}

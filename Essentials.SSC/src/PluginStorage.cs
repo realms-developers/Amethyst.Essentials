@@ -1,5 +1,4 @@
 using Amethyst.Storages.Mongo;
-using Amethyst.Systems.Characters.Storages.MongoDB;
 
 namespace Essentials.SSC;
 

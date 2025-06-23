@@ -1,0 +1,16 @@
+{
+    "essentials.addWarp.invalidName": "Invalid warp name provided.",
+    "essentials.addWarp.success": "Warp '{0}' has been successfully added.",
+    "essentials.removeWarp.invalidName": "Invalid warp name provided.",
+    "essentials.removeWarp.notFound": "Warp '{0}' not found.",
+    "essentials.removeWarp.success": "Warp '{0}' has been successfully removed.",
+    "essentials.listWarps.noWarps": "No warps available.",
+    "essentials.listWarps.success": "Available warps: {0}",
+    "essentials.teleportToWarp.invalidName": "Invalid warp name provided.",
+    "essentials.teleportToWarp.notFound": "Warp '{0}' not found.",
+    "essentials.teleportToWarp.success": "Teleported to warp '{0}'.",
+    "essentials.addWarp": "Adds a new warp at your current position.",
+    "essentials.removeWarp": "Removes an existing warp by name.",
+    "essentials.listWarps": "Lists all available warps.",
+    "essentials.teleportToWarp": "Teleports you to the specified warp."
+}

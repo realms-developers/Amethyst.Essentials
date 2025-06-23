@@ -1,0 +1,15 @@
+{
+    "essentials.tpr.requestFailed": "Запрос на телепортацию не удался.",
+    "essentials.tpr.youWereTeleportedTo": "Вы были телепортированы к {0}.",
+    "essentials.tpr.playerIsTeleportToYou": "{0} был телепортирован к вам.",
+    "essentials.tpr.requestRejected": "Ваш запрос на телепортацию к {0} был отклонен.",
+    "essentials.tpr.requestRejectedBy": "Ваш запрос на телепортацию был отклонен игроком {0}.",
+    "essentials.tpr.targetNotFound": "Иигрок {0} не найден.",
+    "essentials.tpr.targetAlreadyHasRequest": "Игрок {0} уже имеет запрос на телепортацию.",
+    "essentials.tpr.requestSent": "Запрос на телепортацию отправлен игроку {0}.",
+    "essentials.tpr.requestReceived": "Вы получили запрос на телепортацию от игрока {0}.",
+    "essentials.tpr.noPendingRequests": "У вас нет ожидающих запросов на телепортацию.",
+    "essentials.tprequest": "Отправить запрос на телепортацию другому игроку.",
+    "essentials.tpaccept": "Принять запрос на телепортацию.",
+    "essentials.tpdeny": "Отклонить запрос на телепортацию."
+}

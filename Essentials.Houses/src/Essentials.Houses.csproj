@@ -8,6 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Amethyst.Server" Version="10.*" />
-    <ProjectReference Include="..\..\Amethyst.Anvil\Anvil.Regions\Anvil.Regions.csproj" />
+    <ProjectReference Include="..\..\..\Amethyst.Anvil\Anvil.Regions\Anvil.Regions.csproj" />
   </ItemGroup>
 </Project>

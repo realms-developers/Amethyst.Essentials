@@ -1,0 +1,16 @@
+{
+    "essentials.addWarp.invalidName": "Указано недопустимое имя варпа.",
+    "essentials.addWarp.success": "Варп '{0}' успешно добавлен.",
+    "essentials.removeWarp.invalidName": "Указано недопустимое имя варпа.",
+    "essentials.removeWarp.notFound": "Варп '{0}' не найден.",
+    "essentials.removeWarp.success": "Варп '{0}' успешно удалена.",
+    "essentials.listWarps.noWarps": "Нет доступных точек перемещения.",
+    "essentials.listWarps.success": "Доступные варпы",
+    "essentials.teleportToWarp.invalidName": "Указано недопустимое имя варпа.",
+    "essentials.teleportToWarp.notFound": "Варп '{0}' не найден.",
+    "essentials.teleportToWarp.success": "Вы были телепортированы к варпу '{0}'.",
+    "essentials.addWarp": "Добавить новый варп.",
+    "essentials.removeWarp": "Удалить варп.",
+    "essentials.listWarps": "Показать список всех доступных варпов.",
+    "essentials.teleportToWarp": "Телепортироваться к указанному варпу."
+}

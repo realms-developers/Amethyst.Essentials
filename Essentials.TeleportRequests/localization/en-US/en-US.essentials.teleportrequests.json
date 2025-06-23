@@ -1,0 +1,15 @@
+{
+    "essentials.tpr.requestFailed": "Teleport request failed.",
+    "essentials.tpr.youWereTeleportedTo": "You were teleported to {0}.",
+    "essentials.tpr.playerIsTeleportToYou": "{0} has been teleported to you.",
+    "essentials.tpr.requestRejected": "Your teleport request to {0} was rejected.",
+    "essentials.tpr.requestRejectedBy": "Your teleport request was rejected by {0}.",
+    "essentials.tpr.targetNotFound": "Target player {0} not found.",
+    "essentials.tpr.targetAlreadyHasRequest": "Target player {0} already has a pending teleport request.",
+    "essentials.tpr.requestSent": "Teleport request sent to {0}.",
+    "essentials.tpr.requestReceived": "You received a teleport request from {0}.",
+    "essentials.tpr.noPendingRequests": "You have no pending teleport requests.",
+    "essentials.tprequest": "Send a teleport request to another player.",
+    "essentials.tpaccept": "Accept a pending teleport request.",
+    "essentials.tpdeny": "Decline a pending teleport request."
+}
