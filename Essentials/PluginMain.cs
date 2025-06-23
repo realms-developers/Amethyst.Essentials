@@ -1,18 +1,14 @@
 using Amethyst.Extensions.Plugins;
 using Amethyst.Extensions.Base.Metadata;
-using Terraria.Localization;
-using Microsoft.Xna.Framework;
-using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria;
 using Amethyst.Hooks;
-using Amethyst.Hooks.Args.Players;
 using Amethyst.Hooks.Base;
-using Amethyst.Network.Packets;
 using Amethyst.Server.Entities.Players;
 using Amethyst.Network.Handling;
 using Amethyst.Hooks.Args.Utility;
 using Amethyst.Server.Entities;
+using Amethyst.Hooks.Args.Players;
+using Amethyst.Network;
 
 namespace Essentials;
 
@@ -28,6 +24,22 @@ public sealed class PluginMain : PluginInstance
 
         HookRegistry.GetHook<SecondTickArgs>()
             .Register(OnSecondTick);
+
+        HookRegistry.GetHook<PlayerPostSetUserArgs>()
+            .Register(OnPlayerPostSetUser);
+
+        foreach (PlayerEntity player in EntityTrackers.Players)
+        {
+            player.User?.Permissions.AddChild(new ReadonlyWorldPermissionProvider(player.User));
+        }
+    }
+
+    private void OnPlayerPostSetUser(in PlayerPostSetUserArgs args, HookResult<PlayerPostSetUserArgs> result)
+    {
+        if (args.Player.User?.Permissions.HasChild<ReadonlyWorldPermissionProvider>() == true)
+            return;
+
+        args.Player.User?.Permissions.AddChild(new ReadonlyWorldPermissionProvider(args.Player.User));
     }
 
     private void OnSecondTick(in SecondTickArgs args, HookResult<SecondTickArgs> result)
@@ -52,10 +64,61 @@ public sealed class PluginMain : PluginInstance
                 player.SetTeam(0);
             }
         }
+
+        if (EssentialsConfiguration.Instance.DisableWeather)
+        {
+            Main.raining = false;
+            Main.maxRaining = 0f;
+            Main.rainTime = 0;
+
+            Main.windSpeedCurrent = 0f;
+            Main.windSpeedTarget = 0f;
+        }
+
+        if (EssentialsConfiguration.Instance.DisableEvents)
+        {
+            bool send = Terraria.GameContent.Events.Sandstorm.Happening || Terraria.GameContent.Events.DD2Event.Ongoing || Main.bloodMoon || Main.eclipse || Main.slimeRain || Main.pumpkinMoon || Main.snowMoon || Main.bloodMoon || Main.invasionType > 0 ;
+
+            if (Terraria.GameContent.Events.Sandstorm.Happening)
+            {
+                Terraria.GameContent.Events.Sandstorm.StopSandstorm();
+            }
+
+            if (Terraria.GameContent.Events.DD2Event.Ongoing)
+            {
+                Terraria.GameContent.Events.DD2Event.StopInvasion();
+            }
+            
+            Main.bloodMoon = false;
+            Main.eclipse = false;
+            Main.slimeRain = false;
+            Main.pumpkinMoon = false;
+            Main.snowMoon = false;
+            Main.bloodMoon = false;
+            Main.invasionType = 0;
+
+            if (send)
+            {
+                byte[] packet = PacketSendingUtility.CreateWorldInfoPacket();
+
+                foreach (PlayerEntity player in EntityTrackers.Players)
+                {
+                    player.SendPacketBytes(packet);
+                }
+            }
+        }
     }
 
     protected override void Unload()
     {
+        foreach (PlayerEntity player in EntityTrackers.Players)
+        {
+            player.User?.Permissions.RemoveChild<ReadonlyWorldPermissionProvider>();
+        }
+
+        HookRegistry.GetHook<PlayerPostSetUserArgs>()
+            .Unregister(OnPlayerPostSetUser);
+
         HookRegistry.GetHook<SecondTickArgs>()
             .Unregister(OnSecondTick);
 

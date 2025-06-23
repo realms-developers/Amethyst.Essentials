@@ -38,6 +38,49 @@ public static class GameHooks
         On.Terraria.Item.NewItem_IEntitySource_int_int_int_int_int_int_bool_int_bool_bool += OnNewItem1;
         On.Terraria.Item.NewItem_IEntitySource_Vector2_int_int_int_int_bool_int_bool_bool += OnNewItem2;
         On.Terraria.Item.NewItem_IEntitySource_Vector2_Vector2_int_int_bool_int_bool_bool += OnNewItem3;
+
+        On.Terraria.Projectile.NewProjectile_IEntitySource_float_float_float_float_int_int_float_int_float_float_float += OnProjectileNew1;
+        On.Terraria.Projectile.NewProjectile_IEntitySource_Vector2_Vector2_int_int_float_int_float_float_float += OnProjectileNew2;
+    }
+
+    private static int OnProjectileNew2(On.Terraria.Projectile.orig_NewProjectile_IEntitySource_Vector2_Vector2_int_int_float_int_float_float_float orig, IEntitySource spawnSource, Vector2 position, Vector2 velocity, int Type, int Damage, float KnockBack, int Owner, float ai0, float ai1, float ai2)
+    {
+        if (Type == ProjectileID.HappyBomb && EssentialsConfiguration.Instance.DisableClownBombs)
+        {
+            return -1;
+        }
+
+        if (Type == ProjectileID.BombSkeletronPrime && EssentialsConfiguration.Instance.DisablePrimeBombs)
+        {
+            return -1;
+        }
+
+        if (Type == ProjectileID.SnowBallHostile && EssentialsConfiguration.Instance.DisableSnowballs)
+        {
+            return -1;
+        }
+
+        return orig(spawnSource, position, velocity, Type, Damage, KnockBack, Owner, ai0, ai1, ai2);
+    }
+
+    private static int OnProjectileNew1(On.Terraria.Projectile.orig_NewProjectile_IEntitySource_float_float_float_float_int_int_float_int_float_float_float orig, IEntitySource spawnSource, float X, float Y, float SpeedX, float SpeedY, int Type, int Damage, float KnockBack, int Owner, float ai0, float ai1, float ai2)
+    {
+        if (Type == ProjectileID.HappyBomb && EssentialsConfiguration.Instance.DisableClownBombs)
+        {
+            return -1;
+        }
+
+        if (Type == ProjectileID.BombSkeletronPrime && EssentialsConfiguration.Instance.DisablePrimeBombs)
+        {
+            return -1;
+        }
+
+        if (Type == ProjectileID.SnowBallHostile && EssentialsConfiguration.Instance.DisableSnowballs)
+        {
+            return -1;
+        }
+
+        return orig(spawnSource, X, Y, SpeedX, SpeedY, Type, Damage, KnockBack, Owner, ai0, ai1, ai2);
     }
 
     private static int OnNewItem1(On.Terraria.Item.orig_NewItem_IEntitySource_int_int_int_int_int_int_bool_int_bool_bool orig, IEntitySource source, int X, int Y, int Width, int Height, int Type, int Stack, bool noBroadcast, int pfix, bool noGrabDelay, bool reverseLookup)
@@ -264,6 +307,9 @@ public static class GameHooks
 
     internal static void Unload()
     {
+        On.Terraria.Projectile.NewProjectile_IEntitySource_float_float_float_float_int_int_float_int_float_float_float -= OnProjectileNew1;
+        On.Terraria.Projectile.NewProjectile_IEntitySource_Vector2_Vector2_int_int_float_int_float_float_float -= OnProjectileNew2;
+
         On.Terraria.Item.NewItem_IEntitySource_int_int_int_int_int_int_bool_int_bool_bool -= OnNewItem1;
         On.Terraria.Item.NewItem_IEntitySource_Vector2_int_int_int_int_bool_int_bool_bool -= OnNewItem2;
         On.Terraria.Item.NewItem_IEntitySource_Vector2_Vector2_int_int_bool_int_bool_bool -= OnNewItem3;
