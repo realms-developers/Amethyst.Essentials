@@ -45,12 +45,29 @@ public static class PluginCommands
         return new NetVector2(x * 16, y * 16);
     }
 
+    private static void VerifyMobNames()
+    {
+        if (PluginMain.MobsNameToID.Count == 0)
+        {
+            for (int i = 0; i < Terraria.ID.NPCID.Count; i++)
+            {
+                string name = Lang.GetNPCNameValue(i);
+                if (string.IsNullOrEmpty(name))
+                    continue;
+
+                PluginMain.MobsNameToID[name] = i;
+                PluginMain.MobsIDToName[i] = name;
+            }
+        }
+    }
+
     [Command("mobs spawn", "essentials.desc.summonmob")]
     [CommandPermission("essentials.summonmob")]
     [CommandSyntax("en-US", "<mob ID/name>", "[count]", "[x]", "[y]")]
     [CommandSyntax("ru-RU", "<ID/имя моба>", "[количество]", "[x]", "[y]")]
     public static void SummonMobCommand(IAmethystUser user, CommandInvokeContext ctx, string npcNameOrId, int count = 1, int x = -1, int y = -1)
     {
+        VerifyMobNames();
         if (!PluginMain.MobsNameToID.TryGetValue(npcNameOrId, out int npcId) && !int.TryParse(npcNameOrId, out npcId))
         {
             ctx.Messages.ReplyError("essentials.error.invalidmob", npcNameOrId);
@@ -86,6 +103,7 @@ public static class PluginCommands
     [CommandSyntax("ru-RU", "[ID/имя моба]", "[количество]")]
     public static void KillMobCommand(IAmethystUser user, CommandInvokeContext ctx, string? npcNameOrId, int count = -1)
     {
+        VerifyMobNames();
         int npcId = 0;
         if (npcNameOrId != null && !PluginMain.MobsNameToID.TryGetValue(npcNameOrId, out npcId) && !int.TryParse(npcNameOrId, out npcId))
         {

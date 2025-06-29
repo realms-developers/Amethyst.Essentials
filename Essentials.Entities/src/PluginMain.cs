@@ -6,7 +6,7 @@ using Amethyst.Hooks;
 
 namespace Essentials.Entities;
 
-[ExtensionMetadata("Essentials.Entities", "author", "provides epic features")]
+[ExtensionMetadata("Essentials.Entities", "realms-developers", "Provides entities management for Amethyst.API Terraria servers")]
 public sealed class PluginMain : PluginInstance
 {
     public static Dictionary<string, int> MobsNameToID { get; } = [];
@@ -17,17 +17,6 @@ public sealed class PluginMain : PluginInstance
 
     protected override void Load()
     {
-        for (int i = 0; i < Terraria.ID.NPCID.Count; i++)
-        {
-            string name = Lang.GetNPCNameValue(i);
-            if (string.IsNullOrEmpty(name))
-                continue;
-
-            MobsNameToID[name] = i;
-            MobsIDToName[i] = name;
-        }
-
-
         AddBoss(NPCID.KingSlime, "kingslime", "king");
         AddBoss(NPCID.EyeofCthulhu, "eyeofcthulhu", "eye", "cthulhu");
         AddBoss(NPCID.BrainofCthulhu, "brainofcthulhu", "brain");
