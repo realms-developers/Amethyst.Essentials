@@ -2,6 +2,7 @@ using Amethyst.Extensions.Plugins;
 using Amethyst.Extensions.Base.Metadata;
 using Terraria;
 using Terraria.ID;
+using Amethyst.Hooks;
 
 namespace Essentials.Entities;
 
