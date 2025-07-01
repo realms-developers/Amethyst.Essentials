@@ -183,12 +183,14 @@ public static class PluginCommands
         Dictionary<int, List<string>> bosses = [];
         foreach (var kvp in PluginMain.BossesNameToID)
         {
-            if (bosses[kvp.Value] == null)
+            if (bosses.TryGetValue(kvp.Value, out List<string>? bossList))
             {
-                bosses[kvp.Value] = [];
+                bossList.Add(kvp.Key);
             }
-
-            bosses[kvp.Value].Add(kvp.Key);
+            else
+            {
+                bosses.Add(kvp.Value, [kvp.Key]);
+            }
         }
 
         PagesCollection pages = PagesCollection.AsPage(PluginMain.BossesNameToID.Select(p => $"{p.Value}: {string.Join(", ", bosses[p.Value])}").ToList());
@@ -318,19 +320,22 @@ public static class PluginCommands
     [CommandSyntax("ru-RU", "[страница]")]
     public static void ListMiniBossesCommand(IAmethystUser user, CommandInvokeContext ctx, int page = 0)
     {
-        Dictionary<int, List<string>> minibosses = [];
+        Dictionary<int, List<string>> bosses = [];
         foreach (var kvp in PluginMain.MiniBossesNameToID)
         {
-            if (!minibosses.ContainsKey(kvp.Value))
+            if (bosses.TryGetValue(kvp.Value, out List<string>? bossList))
             {
-                minibosses[kvp.Value] = [];
+                bossList.Add(kvp.Key);
             }
-            minibosses[kvp.Value].Add(kvp.Key);
+            else
+            {
+                bosses.Add(kvp.Value, [kvp.Key]);
+            }
         }
 
         PagesCollection pages = PagesCollection.AsPage(
             PluginMain.MiniBossesNameToID
-                .Select(p => $"{p.Value}: {string.Join(", ", minibosses[p.Value])}")
+                .Select(p => $"{p.Value}: {string.Join(", ", bosses[p.Value])}")
                 .ToList()
         );
         ctx.Messages.ReplyPage(pages, "essentials.desc.listminibosses", null, null, false, page);

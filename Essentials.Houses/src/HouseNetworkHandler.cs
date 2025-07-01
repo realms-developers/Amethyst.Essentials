@@ -57,7 +57,7 @@ public sealed class HouseNetworkHandler : INetworkHandler
         }
 
         ignore = true;
-        if (ext.Selection.Point1Set)
+        if (!ext.Selection.Point1Set)
         {
             ext.Selection.SetPoint1(packet.TileX, packet.TileY);
             plr.User.Messages.ReplyInfo("essentials.houses.setpoint1", packet.TileX, packet.TileY);

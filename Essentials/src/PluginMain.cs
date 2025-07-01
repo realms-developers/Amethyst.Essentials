@@ -10,6 +10,7 @@ using Amethyst.Server.Entities;
 using Amethyst.Hooks.Args.Players;
 using Amethyst.Network;
 using Terraria.GameContent.Creative;
+using Amethyst.Kernel;
 
 namespace Essentials;
 
@@ -45,6 +46,11 @@ public sealed class PluginMain : PluginInstance
 
     private void OnSecondTick(in SecondTickArgs args, HookResult<SecondTickArgs> result)
     {
+        if (!AmethystSession.Launcher.IsStarted)
+        {
+            return;
+        }
+
         if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled != EssentialsConfiguration.Instance.FreezeTime)
         {
             CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().SetPowerInfo(EssentialsConfiguration.Instance.FreezeTime);
