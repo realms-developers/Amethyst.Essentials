@@ -58,7 +58,7 @@ public static class PluginCommands
         UserRequest<TeleportContext> request = new RequestBuilder<TeleportContext>(
             "essentials.teleportrequest",
             user.Requests.FindFreeIndex("essentials.teleportrequest"),
-            new TeleportContext(target, user.Player))
+            new TeleportContext(user.Player, target))
             .WithAutoRemove(true).WithRemoveIn(TimeSpan.FromMinutes(1))
             .WithOnAccepted(OnAccepted)
             .WithOnRejected(OnRejected)
