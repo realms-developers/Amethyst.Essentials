@@ -61,12 +61,12 @@ public sealed class HouseNetworkHandler : INetworkHandler
         {
             ext.Selection.SetPoint1(packet.TileX, packet.TileY);
             plr.User.Messages.ReplyInfo("essentials.houses.setpoint1", packet.TileX, packet.TileY);
+            return;
         }
         else
         {
             ext.Selection.SetPoint2(packet.TileX, packet.TileY);
             plr.User.Messages.ReplyInfo("essentials.houses.setpoint2", packet.TileX, packet.TileY);
-            plr.User.Messages.ReplyInfo("essentials.houses.useCommandToDefineRegion");
         }
 
         RegionSize? maxSize = FindMaxSize(plr.User);
